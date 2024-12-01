@@ -47,7 +47,7 @@ function Staff() {
         </div>
       )}
       {showAddForm && (
-        <AddStaffForm onStaffAdded={handleStaffAdded} />
+        <AddStaffForm onStaffAdded={handleStaffAdded} onBack={() => setShowAddForm(false)} />
       )}
       {editingStaff && (
         <EditStaffForm
