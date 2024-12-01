@@ -60,6 +60,7 @@ const styles = {
     backgroundColor: '#f9f9f9',
     maxWidth: '500px',
     margin: '0 auto',
+    color: 'black'
   },
   buttonContainer: {
     display: 'flex',
