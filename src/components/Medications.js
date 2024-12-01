@@ -33,6 +33,10 @@ function Medications() {
     setEditingMedication(null); // Close the edit form without saving
   };
 
+  const handleDeleteSuccess = () => {
+    setSelectedMedication(null); // Reset selected medication to refresh the list
+  };
+
   return (
     <div style={styles.container}>
       {!selectedMedication && !editingMedication && !showAddForm && (
@@ -47,7 +51,10 @@ function Medications() {
         </div>
       )}
       {showAddForm && (
-        <AddMedicationForm onMedicationAdded={handleMedicationAdded} />
+        <AddMedicationForm 
+          onMedicationAdded={handleMedicationAdded} 
+          onDiscard={() => setShowAddForm(false)}
+        />
       )}
       {editingMedication && (
         <EditMedicationForm
@@ -61,6 +68,7 @@ function Medications() {
           medication={selectedMedication}
           onBack={() => setSelectedMedication(null)}
           onEdit={handleEditMedication}
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </div>
