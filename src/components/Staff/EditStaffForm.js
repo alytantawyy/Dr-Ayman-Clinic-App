@@ -113,7 +113,7 @@ function EditStaffForm({ staff, onStaffUpdated, onDiscard }) {
         <div style={styles.buttonContainer}>
           <button type="submit" style={styles.button}>Save Changes</button>
           <button type="button" onClick={onDiscard} style={styles.discardButton}>
-            Discard Changes
+            Back To List
           </button>
         </div>
       </form>
