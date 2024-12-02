@@ -49,6 +49,7 @@ function Appointments() {
       {showAddForm && (
         <AddAppointmentForm
           onAppointmentAdded={handleAppointmentAdded}
+          onBack={() => setShowAddForm(false)}
         />
       )}
       {editingAppointment && (

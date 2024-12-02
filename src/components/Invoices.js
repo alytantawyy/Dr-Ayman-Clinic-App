@@ -47,7 +47,7 @@ function Invoices() {
         </div>
       )}
       {showAddForm && (
-        <AddInvoiceForm onInvoiceAdded={handleInvoiceAdded} />
+        <AddInvoiceForm onInvoiceAdded={handleInvoiceAdded} onBack={() => setShowAddForm(false)} />
       )}
       {editingInvoice && (
         <EditInvoiceForm
