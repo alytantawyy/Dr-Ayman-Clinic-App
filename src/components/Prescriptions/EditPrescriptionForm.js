@@ -66,7 +66,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
       <form onSubmit={handleSubmit} style={styles.form}>
         <h2 style={styles.title}>Edit Prescription</h2>
 
-        <label>Patient</label>
+        <label style={styles.label}>Patient</label>
         <select
           name="patientid"
           value={formData.patientid}
@@ -81,7 +81,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           ))}
         </select>
 
-        <label>Medication</label>
+        <label style={styles.label}>Medication</label>
         <select
           name="medicationid"
           value={formData.medicationid}
@@ -96,7 +96,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           ))}
         </select>
 
-        <label>Quantity</label>
+        <label style={styles.label}>Quantity</label>
         <input
           type="number"
           name="quantity"
@@ -107,7 +107,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           required
         />
 
-        <label>Date Prescribed</label>
+        <label style={styles.label}>Date Prescribed</label>
         <input
           type="date"
           name="dateprescribed"

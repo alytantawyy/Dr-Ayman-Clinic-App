@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PrescriptionsList from './Prescriptions/PrescriptionsList';
 import AddPrescriptionForm from './Prescriptions/AddPrescriptionForm';
-import EditPrescriptionForm from './Prescriptions/EditPrescriptionForm.js';
+import EditPrescriptionForm from './Prescriptions/EditPrescriptionForm';
 
 function Prescriptions() {
   const [selectedPrescription, setSelectedPrescription] = useState(null);

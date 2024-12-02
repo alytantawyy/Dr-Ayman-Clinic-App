@@ -58,69 +58,106 @@ function AddPrescriptionForm({ onPrescriptionAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <h2>Add Prescription</h2>
+    <div style={styles.overlay}>
+      <div style={styles.container}>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <h2 style={styles.title}>Add Prescription</h2>
 
-      <label>Patient</label>
-      <select
-        name="patientid"
-        value={formData.patientid}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select Patient</option>
-        {patients.map((patient) => (
-          <option key={patient.patientid} value={patient.patientid}>
-            {patient.firstname} {patient.lastname}
-          </option>
-        ))}
-      </select>
+          <label style={styles.label}>Patient</label>
+          <select
+            name="patientid"
+            value={formData.patientid}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Patient</option>
+            {patients.map((patient) => (
+              <option key={patient.patientid} value={patient.patientid}>
+                {patient.firstname} {patient.lastname}
+              </option>
+            ))}
+          </select>
 
-      <label>Medication</label>
-      <select
-        name="medicationid"
-        value={formData.medicationid}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select Medication</option>
-        {medications.map((medication) => (
-          <option key={medication.medicationid} value={medication.medicationid}>
-            {medication.name}
-          </option>
-        ))}
-      </select>
+          <label style={styles.label}>Medication</label>
+          <select
+            name="medicationid"
+            value={formData.medicationid}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Medication</option>
+            {medications.map((medication) => (
+              <option key={medication.medicationid} value={medication.medicationid}>
+                {medication.name}
+              </option>
+            ))}
+          </select>
 
-      <label>Quantity</label>
-      <input
-        type="number"
-        name="quantity"
-        value={formData.quantity}
-        onChange={handleChange}
-        placeholder="Enter quantity"
-        min="1"
-        required
-      />
+          <label style={styles.label}>Quantity</label>
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            placeholder="Enter quantity"
+            min="1"
+            required
+          />
 
-      <label>Date Prescribed</label>
-      <input
-        type="date"
-        name="dateprescribed"
-        value={formData.dateprescribed}
-        onChange={handleChange}
-        required
-      />
+          <label style={styles.label}>Date Prescribed</label>
+          <input
+            type="date"
+            name="dateprescribed"
+            value={formData.dateprescribed}
+            onChange={handleChange}
+            required
+          />
 
-      <button type="submit" style={styles.submitButton}>Add Prescription</button>
-    </form>
+          <div style={styles.buttonContainer}>
+            <button type="submit" style={styles.submitButton}>Add Prescription</button>
+            <button type="button" onClick={() => onPrescriptionAdded()} style={styles.discardButton}>
+              Discard Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 
 const styles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+  },
+  container: {
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    maxWidth: '400px',
+    color: 'black'
+  },
   form: {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
+  label: {
+    fontWeight: 'bold',
   },
   submitButton: {
     backgroundColor: '#4CAF50',
@@ -129,6 +166,19 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
+  },
+  discardButton: {
+    backgroundColor: '#f44336',
+    color: 'white',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '20px',
   },
 };
 
