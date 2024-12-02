@@ -27,6 +27,11 @@ function MedicationsList({ onSelectMedication, onEditMedication }) {
       medication.description.toLowerCase().includes(searchQuery)
   );
 
+  // Sort medications by name
+  const sortedMedications = filteredMedications.sort((a, b) => {
+    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+  });
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -40,7 +45,7 @@ function MedicationsList({ onSelectMedication, onEditMedication }) {
         style={styles.searchInput}
       />
       <ul>
-        {filteredMedications.map((medication) => (
+        {sortedMedications.map((medication) => (
           <li key={medication.medicationid} style={styles.medicationItem}>
             <p>
               <strong>{medication.name}</strong> <br />

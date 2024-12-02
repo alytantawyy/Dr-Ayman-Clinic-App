@@ -28,6 +28,12 @@ function StaffList({ onSelectStaff, onEditStaff }) {
       member.role.toLowerCase().includes(searchQuery)
   );
 
+  const sortedStaff = filteredStaff.sort((a, b) => {
+    const fullNameA = `${a.firstname} ${a.lastname}`.toLowerCase();
+    const fullNameB = `${b.firstname} ${b.lastname}`.toLowerCase();
+    return fullNameA.localeCompare(fullNameB);
+  });
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -41,7 +47,7 @@ function StaffList({ onSelectStaff, onEditStaff }) {
         style={styles.searchInput}
       />
       <ul>
-        {filteredStaff.map((member) => (
+        {sortedStaff.map((member) => (
           <li key={member.staffid} style={styles.staffItem}>
             <p style={styles.staffInfo}>
               {member.firstname} {member.lastname} - {member.role}

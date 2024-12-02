@@ -28,6 +28,12 @@ function PatientsList({ onSelectPatient, onEditPatient }) {
       patient.email.toLowerCase().includes(searchQuery)
   );
 
+  const sortedPatients = filteredPatients.sort((a, b) => {
+    const fullNameA = `${a.firstname} ${a.lastname}`.toLowerCase();
+    const fullNameB = `${b.firstname} ${b.lastname}`.toLowerCase();
+    return fullNameA.localeCompare(fullNameB);
+  });
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -41,7 +47,7 @@ function PatientsList({ onSelectPatient, onEditPatient }) {
         style={styles.searchInput}
       />
       <ul>
-        {filteredPatients.map((patient) => (
+        {sortedPatients.map((patient) => (
           <li key={patient.patientid} style={styles.patientItem}>
             <p>
               {patient.firstname} {patient.lastname} - {patient.email}

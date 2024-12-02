@@ -48,14 +48,21 @@ function PrescriptionsList({ onSelectPrescription, onEditPrescription }) {
 
   if (loading) return <p>Loading...</p>;
 
+  // Sort prescriptions by patient name
+  const sortedPrescriptions = prescriptions.sort((a, b) => {
+    const patientNameA = `${a.patients.firstname} ${a.patients.lastname}`.toLowerCase();
+    const patientNameB = `${b.patients.firstname} ${b.patients.lastname}`.toLowerCase();
+    return patientNameA.localeCompare(patientNameB);
+  });
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Prescriptions</h1>
-      {prescriptions.length === 0 ? (
+      {sortedPrescriptions.length === 0 ? (
         <p>No prescriptions available.</p>
       ) : (
         <ul>
-          {prescriptions.map((prescription) => (
+          {sortedPrescriptions.map((prescription) => (
             <li key={prescription.prescriptionid} style={styles.item}>
               <p>
                 <strong>Patient:</strong> {prescription.patients.firstname} {prescription.patients.lastname} <br />

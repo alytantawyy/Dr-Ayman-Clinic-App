@@ -41,6 +41,13 @@ function AppointmentsList({ onSelectAppointment, onEditAppointment }) {
     );
   });
 
+  // Sort appointments by patient name
+  const sortedAppointments = filteredAppointments.sort((a, b) => {
+    const patientNameA = `${a.patients.firstname} ${a.patients.lastname}`.toLowerCase();
+    const patientNameB = `${b.patients.firstname} ${b.patients.lastname}`.toLowerCase();
+    return patientNameA.localeCompare(patientNameB);
+  });
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -54,7 +61,7 @@ function AppointmentsList({ onSelectAppointment, onEditAppointment }) {
         style={styles.searchInput}
       />
       <ul>
-        {filteredAppointments.map((appointment) => (
+        {sortedAppointments.map((appointment) => (
           <li key={appointment.appointmentid} style={styles.appointmentItem}>
             <p>
               <strong>Patient:</strong> {appointment.patients.firstname} {appointment.patients.lastname} <br />

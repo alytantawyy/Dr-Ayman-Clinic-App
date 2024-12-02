@@ -42,6 +42,13 @@ function InvoicesList({ onSelectInvoice, onEditInvoice }) {
     );
   });
 
+  // Sort invoices by patient name
+  const sortedInvoices = filteredInvoices.sort((a, b) => {
+    const patientNameA = `${a.patients.firstname} ${a.patients.lastname}`.toLowerCase();
+    const patientNameB = `${b.patients.firstname} ${b.patients.lastname}`.toLowerCase();
+    return patientNameA.localeCompare(patientNameB);
+  });
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -55,7 +62,7 @@ function InvoicesList({ onSelectInvoice, onEditInvoice }) {
         style={styles.searchInput}
       />
       <ul>
-        {filteredInvoices.map((invoice) => (
+        {sortedInvoices.map((invoice) => (
           <li key={invoice.invoiceid} style={styles.invoiceItem}>
             <p>
               <strong>Patient:</strong> {invoice.patients.firstname} {invoice.patients.lastname} <br />

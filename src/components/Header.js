@@ -20,6 +20,7 @@ function Header() {
         <Link to="/appointments" style={styles.link}>Appointments</Link>
         <Link to="/invoices" style={styles.link}>Invoices</Link>
         <Link to="/medications" style={styles.link}>Medications</Link>
+        <Link to="/prescriptions" style={styles.link}>Prescriptions</Link>
       </nav>
     </header>
   );
