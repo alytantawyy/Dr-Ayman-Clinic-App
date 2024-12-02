@@ -27,7 +27,8 @@ function EditPatientForm({ patient, onPatientUpdated, onDiscard }) {
       const { data, error } = await supabase
         .from('patients')
         .update(formData)
-        .eq('patientid', patient.patientid);
+        .eq('patientid', patient.patientid)
+        .select();
 
       if (error) {
         console.error('Error updating patient:', error.message);
