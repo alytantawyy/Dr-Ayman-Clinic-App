@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
-import DeleteStaff from './DeleteStaff';
+import React from 'react';
+import { supabase } from '../../supabaseClient';
 
-function StaffDetails({ staff, onBack, onEdit }) {
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+function StaffDetails({ staff, onBack, onEdit, onDeleteSuccess }) {
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the staff member "${staff.firstname} ${staff.lastname}"?`
+    );
+    if (confirmDelete) {
+      const { error } = await supabase
+        .from('staff')
+        .delete()
+        .eq('staffid', staff.staffid);
 
-  const handleDeleteSuccess = () => {
-    setShowDeleteConfirmation(false);
-    onBack(); // Return to staff list after deletion
+      if (error) {
+        console.error('Error deleting staff:', error);
+        alert('Failed to delete staff.');
+      } else {
+        alert('Staff deleted successfully!');
+        onDeleteSuccess(); // Notify parent component to refresh the list
+      }
+    }
   };
 
   return (
@@ -21,16 +34,8 @@ function StaffDetails({ staff, onBack, onEdit }) {
       <div style={styles.buttonContainer}>
         <button onClick={onBack} style={styles.button}>Back to List</button>
         <button onClick={() => onEdit(staff)} style={styles.editButton}>Edit</button>
-        <button
-          onClick={() => setShowDeleteConfirmation(true)}
-          style={styles.deleteButton}
-        >
-          Delete
-        </button>
+        <button onClick={handleDelete} style={styles.deleteButton}>Delete</button>
       </div>
-      {showDeleteConfirmation && (
-        <DeleteStaff staffId={staff.staffid} onDeleteSuccess={handleDeleteSuccess} />
-      )}
     </div>
   );
 }

@@ -33,6 +33,10 @@ function Staff() {
     setEditingStaff(null); // Close the edit form without saving
   };
 
+  const handleDeleteSuccess = () => {
+    setSelectedStaff(null); // Reset selected staff to refresh the list
+  };
+
   return (
     <div style={styles.container}>
       {!selectedStaff && !editingStaff && !showAddForm && (
@@ -61,6 +65,7 @@ function Staff() {
           staff={selectedStaff}
           onBack={() => setSelectedStaff(null)}
           onEdit={handleEditStaff}
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </div>
