@@ -22,7 +22,8 @@ function EditStaffForm({ staff, onStaffUpdated, onDiscard }) {
     const { data, error } = await supabase
       .from('staff')
       .update(formData)
-      .eq('staffid', staff.staffid);
+      .eq('staffid', staff.staffid)
+      .select();
 
     if (error) {
       console.error('Error updating staff:', error.message);
