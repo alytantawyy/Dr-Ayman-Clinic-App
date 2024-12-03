@@ -23,25 +23,25 @@ function AddPatientForm({ onPatientAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { data, error } = await supabase.from('patients').insert([formData]);
+    
+    console.log('Insert Response:', data);
+    console.error('Insert Error:', error);
 
-    try {
-      // Insert data into the `patients` table
-      const { data, error } = await supabase.from('patients').insert([formData]).select();
-
-      if (error) {
-        console.error('Error adding patient:', error);
-        alert('Failed to add patient.');
-      } else if (data && data.length > 0) {
-        alert('Patient added successfully!');
-        onPatientAdded(); // Notify the parent
-        navigate('/patients'); // Navigate back to the Patients page
-      } else {
-        alert('No data returned after adding patient.');
-      }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      alert('An unexpected error occurred.');
+    if (error) {
+      console.error('Error adding patient:', error);
+      alert('Failed to add patient.'); // Show an alert if there's an error
+    } else if (data && data.length > 0) {
+      alert('Patient added successfully!'); // Success message
+      onPatientAdded(data[0]); // Notify parent component
+      navigate('/patients'); // Navigate back to the Patients page
+    } else {
+      alert('No data returned after adding patient.'); // Handle unexpected case
     }
+  };
+
+  const handleBack = () => {
+    onPatientAdded(); // Notify parent to close the form
   };
 
   return (
@@ -49,7 +49,7 @@ function AddPatientForm({ onPatientAdded }) {
       <div style={styles.container}>
         <form onSubmit={handleSubmit} style={styles.form}>
           <h2 style={styles.title}>Add Patient</h2>
-
+          
           <label style={styles.label}>First Name</label>
           <input
             type="text"
@@ -60,7 +60,7 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Last Name</label>
           <input
             type="text"
@@ -71,7 +71,7 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Date of Birth</label>
           <input
             type="date"
@@ -81,20 +81,14 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Gender</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-            style={styles.input}
-          >
+          <select name="gender" value={formData.gender} onChange={handleChange} required style={styles.input}>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Other">Other</option>
           </select>
-
+          
           <label style={styles.label}>Phone</label>
           <input
             type="text"
@@ -105,7 +99,7 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Email</label>
           <input
             type="email"
@@ -116,7 +110,7 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Address</label>
           <input
             type="text"
@@ -127,7 +121,7 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <label style={styles.label}>Emergency Contact</label>
           <input
             type="text"
@@ -138,14 +132,12 @@ function AddPatientForm({ onPatientAdded }) {
             required
             style={styles.input}
           />
-
+          
           <div style={styles.buttonContainer}>
-            <button type="button" onClick={() => navigate('/patients')} style={styles.backButton}>
+            <button type="button" onClick={handleBack} style={styles.backButton}>
               Back to Patients
             </button>
-            <button type="submit" style={styles.submitButton}>
-              Add Patient
-            </button>
+            <button type="submit" style={styles.submitButton}>Add Patient</button>
           </div>
         </form>
       </div>
@@ -173,7 +165,7 @@ const styles = {
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
     width: '100%',
     maxWidth: '300px',
-    color: 'black',
+    color: 'black'
   },
   form: {
     display: 'flex',
@@ -218,5 +210,6 @@ const styles = {
     fontSize: '14px',
   },
 };
+
 
 export default AddPatientForm;
