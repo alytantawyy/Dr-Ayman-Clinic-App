@@ -12,6 +12,7 @@ function InvoicesList({ onSelectInvoice, onEditInvoice }) {
         .from('invoices')
         .select(`
           invoiceid,
+          patientid,
           invoicedate,
           totalamount,
           status,
@@ -87,7 +88,7 @@ const styles = {
     fontFamily: 'Arial, sans-serif',
   },
   heading: {
-    textAlign: 'center', // Center the heading
+    textAlign: 'center', 
   },
   searchInput: {
     padding: '10px',

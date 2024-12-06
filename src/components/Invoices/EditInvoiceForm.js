@@ -4,11 +4,20 @@ import { supabase } from '../../supabaseClient';
 function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
   const [patients, setPatients] = useState([]);
   const [formData, setFormData] = useState({
-    patientid: invoice.patientid || '',
-    invoicedate: invoice.invoicedate || '',
-    totalamount: invoice.totalamount || '',
-    status: invoice.status || 'Pending',
+    patientid: '',
+    invoicedate: '',
+    totalamount: '',
+    status: 'Pending',
   });
+
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -19,9 +28,19 @@ function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
         setPatients(data || []);
       }
     };
-
     fetchPatients();
   }, []);
+
+  useEffect(() => {
+    if (invoice && patients.length > 0) {
+      setFormData({
+        patientid: invoice.patientid || '',
+        invoicedate: formatDateForInput(invoice.invoicedate),
+        totalamount: invoice.totalamount || '',
+        status: invoice.status || 'Pending',
+      });
+    }
+  }, [invoice, patients]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +53,7 @@ function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
     const updatedData = {
       patientid: formData.patientid,
       invoicedate: formData.invoicedate,
-      totalamount: formData.totalamount,
+      totalamount: parseFloat(formData.totalamount),
       status: formData.status,
     };
 
@@ -48,22 +67,31 @@ function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
       alert('Failed to update invoice.');
     } else {
       alert('Invoice updated successfully!');
-      onInvoiceUpdated(); // Notify parent component
+      onInvoiceUpdated();
     }
   };
+
+  if (patients.length === 0) {
+    return (
+      <div style={styles.overlay}>
+        <div style={styles.form}>
+          <h2 style={styles.title}>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.overlay}>
       <form onSubmit={handleSubmit} style={styles.form}>
         <h2 style={styles.title}>Edit Invoice</h2>
 
-        <label style={styles.label}>Patient</label>
+        <label>Patient</label>
         <select
           name="patientid"
           value={formData.patientid}
           onChange={handleChange}
           required
-          style={styles.input}
         >
           <option value="">Select Patient</option>
           {patients.map((patient) => (
@@ -73,17 +101,16 @@ function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
           ))}
         </select>
 
-        <label style={styles.label}>Invoice Date</label>
+        <label>Invoice Date</label>
         <input
           type="date"
           name="invoicedate"
           value={formData.invoicedate}
           onChange={handleChange}
           required
-          style={styles.input}
         />
 
-        <label style={styles.label}>Total Amount</label>
+        <label>Total Amount</label>
         <input
           type="number"
           name="totalamount"
@@ -92,16 +119,14 @@ function EditInvoiceForm({ invoice, onInvoiceUpdated, onDiscard }) {
           step="0.01"
           min="0"
           required
-          style={styles.input}
         />
 
-        <label style={styles.label}>Status</label>
+        <label>Status</label>
         <select
           name="status"
           value={formData.status}
           onChange={handleChange}
           required
-          style={styles.input}
         >
           <option value="Pending">Pending</option>
           <option value="Paid">Paid</option>
@@ -125,7 +150,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Light overlay background
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   form: {
     backgroundColor: 'white',
@@ -136,7 +161,8 @@ const styles = {
     maxWidth: '400px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px',
+    gap: '10px',
+    color: 'black'
   },
   title: {
     textAlign: 'center',
@@ -145,33 +171,22 @@ const styles = {
     fontWeight: 'bold',
     color: 'black',
   },
-  label: {
-    fontSize: '16px',
-    color: 'black',
-    marginBottom: '5px',
-  },
-  input: {
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    fontSize: '16px',
-  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'space-between',
   },
   saveButton: {
-    padding: '10px 20px',
     backgroundColor: '#4CAF50',
     color: 'white',
+    padding: '10px 20px',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
   },
   discardButton: {
-    padding: '10px 20px',
     backgroundColor: '#f44336',
     color: 'white',
+    padding: '10px 20px',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
