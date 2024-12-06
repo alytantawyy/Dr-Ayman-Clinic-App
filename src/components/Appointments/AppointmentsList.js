@@ -15,6 +15,8 @@ function AppointmentsList({ onSelectAppointment, onEditAppointment }) {
           appointmentdate,
           status,
           notes,
+          patientid,
+          staffid,
           patients (firstname, lastname),
           staff (firstname, lastname, role)
         `);
@@ -41,7 +43,6 @@ function AppointmentsList({ onSelectAppointment, onEditAppointment }) {
     );
   });
 
-  // Sort appointments by patient name
   const sortedAppointments = filteredAppointments.sort((a, b) => {
     const patientNameA = `${a.patients.firstname} ${a.patients.lastname}`.toLowerCase();
     const patientNameB = `${b.patients.firstname} ${b.patients.lastname}`.toLowerCase();
@@ -86,7 +87,7 @@ const styles = {
     fontFamily: 'Arial, sans-serif',
   },
   heading: {
-    textAlign: 'center', // Center the heading
+    textAlign: 'center',
   },
   searchInput: {
     padding: '10px',

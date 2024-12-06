@@ -12,7 +12,7 @@ function EditAppointmentForm({ appointment, onAppointmentUpdated, onDiscard }) {
     notes: '',
   });
 
-  // Format the date for the `datetime-local` input field
+  // Format the date for the datetime-local input field
   const formatDateForInput = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -25,22 +25,11 @@ function EditAppointmentForm({ appointment, onAppointmentUpdated, onDiscard }) {
   };
 
   useEffect(() => {
-    if (appointment) {
-      setFormData({
-        patientid: appointment.patientid || '',
-        staffid: appointment.staffid || '',
-        appointmentdate: formatDateForInput(appointment.appointmentdate),
-        status: appointment.status || 'Scheduled',
-        notes: appointment.notes || '',
-      });
-    }
-  }, [appointment]);
-
-  useEffect(() => {
     const fetchData = async () => {
       const { data: patientsData, error: patientsError } = await supabase
         .from('patients')
         .select('*');
+
       const { data: staffData, error: staffError } = await supabase
         .from('staff')
         .select('*');
@@ -55,6 +44,19 @@ function EditAppointmentForm({ appointment, onAppointmentUpdated, onDiscard }) {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Only set form data after we have the appointment and both arrays
+    if (appointment && patients.length > 0 && staff.length > 0) {
+      setFormData({
+        patientid: appointment.patientid || '',
+        staffid: appointment.staffid || '',
+        appointmentdate: formatDateForInput(appointment.appointmentdate),
+        status: appointment.status || 'Scheduled',
+        notes: appointment.notes || '',
+      });
+    }
+  }, [appointment, patients, staff]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,7 +64,7 @@ function EditAppointmentForm({ appointment, onAppointmentUpdated, onDiscard }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('appointments')
       .update({
         patientid: formData.patientid,
@@ -81,6 +83,17 @@ function EditAppointmentForm({ appointment, onAppointmentUpdated, onDiscard }) {
       onAppointmentUpdated();
     }
   };
+
+  // If we haven't loaded patients and staff yet, show a loading state
+  if (patients.length === 0 || staff.length === 0) {
+    return (
+      <div style={styles.overlay}>
+        <div style={styles.form}>
+          <h2 style={styles.title}>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.overlay}>
@@ -157,7 +170,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Light overlay background
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   form: {
     backgroundColor: 'white',
