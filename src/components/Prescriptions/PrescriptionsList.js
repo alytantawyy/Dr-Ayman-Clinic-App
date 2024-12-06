@@ -11,6 +11,8 @@ function PrescriptionsList({ onSelectPrescription, onEditPrescription }) {
         .from('prescriptions')
         .select(`
           prescriptionid,
+          patientid,
+          medicationid,
           dateprescribed,
           quantity,
           patients (firstname, lastname),
@@ -92,7 +94,7 @@ const styles = {
     fontFamily: 'Arial, sans-serif',
   },
   heading: {
-    textAlign: 'center', // Center the heading
+    textAlign: 'center',
   },
   item: {
     marginBottom: '10px',

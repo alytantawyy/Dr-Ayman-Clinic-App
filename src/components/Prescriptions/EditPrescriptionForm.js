@@ -5,16 +5,29 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
   const [patients, setPatients] = useState([]);
   const [medications, setMedications] = useState([]);
   const [formData, setFormData] = useState({
-    patientid: prescription.patientid || '',
-    medicationid: prescription.medicationid || '',
-    quantity: prescription.quantity || '',
-    dateprescribed: prescription.dateprescribed || '',
+    patientid: '',
+    medicationid: '',
+    quantity: '',
+    dateprescribed: '',
   });
+
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: patientsData, error: patientsError } = await supabase.from('patients').select('*');
-      const { data: medicationsData, error: medicationsError } = await supabase.from('medications').select('*');
+      const { data: patientsData, error: patientsError } = await supabase
+        .from('patients')
+        .select('*');
+      const { data: medicationsData, error: medicationsError } = await supabase
+        .from('medications')
+        .select('*');
 
       if (patientsError) {
         console.error('Error fetching patients:', patientsError);
@@ -31,6 +44,18 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Only set formData after prescription, patients, and medications are loaded
+    if (prescription && patients.length > 0 && medications.length > 0) {
+      setFormData({
+        patientid: prescription.patientid || '',
+        medicationid: prescription.medicationid || '',
+        quantity: prescription.quantity || '',
+        dateprescribed: formatDateForInput(prescription.dateprescribed),
+      });
+    }
+  }, [prescription, patients, medications]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,16 +82,26 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
       alert('Failed to update prescription.');
     } else {
       alert('Prescription updated successfully!');
-      onPrescriptionUpdated(); // Notify parent to refresh the list
+      onPrescriptionUpdated();
     }
   };
+
+  if (patients.length === 0 || medications.length === 0) {
+    return (
+      <div style={styles.overlay}>
+        <div style={styles.form}>
+          <h2 style={styles.title}>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.overlay}>
       <form onSubmit={handleSubmit} style={styles.form}>
         <h2 style={styles.title}>Edit Prescription</h2>
 
-        <label style={styles.label}>Patient</label>
+        <label>Patient</label>
         <select
           name="patientid"
           value={formData.patientid}
@@ -81,7 +116,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           ))}
         </select>
 
-        <label style={styles.label}>Medication</label>
+        <label>Medication</label>
         <select
           name="medicationid"
           value={formData.medicationid}
@@ -96,7 +131,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           ))}
         </select>
 
-        <label style={styles.label}>Quantity</label>
+        <label>Quantity</label>
         <input
           type="number"
           name="quantity"
@@ -107,7 +142,7 @@ function EditPrescriptionForm({ prescription, onPrescriptionUpdated, onDiscard }
           required
         />
 
-        <label style={styles.label}>Date Prescribed</label>
+        <label>Date Prescribed</label>
         <input
           type="date"
           name="dateprescribed"
@@ -133,7 +168,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Subtle overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   form: {
     backgroundColor: 'white',
@@ -145,7 +180,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    color: 'black'
+    color: 'black',
   },
   title: {
     textAlign: 'center',
